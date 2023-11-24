@@ -48,16 +48,19 @@ if prompt := st.chat_input("Tell me about your problem ?"):
         audio_output.save("speech_output.mp4")
         st.audio("speech_output.mp4")
 
+    try : 
     
-    if output["data"][0]["content"][0]["text"]["annotations"] != [] or "generate pdf" in prompt.lower() or "psychgen" in prompt.lower():
-        file_id = output["data"][0]["content"][0]["text"]["annotations"][0]["file_path"]["file_id"]
-        file_type = output["data"][0]["content"][0]["text"]["annotations"][0]["text"].split(".")[1]
-        PDFbyte = download_file(file_id,file_type)
-        # st.download_button("Download PDF",f"script.{file_type}")
-        st.download_button(label="Download PDF",
-                    data=PDFbyte,
-                    file_name="test.pdf",
-                    mime='application/octet-stream')
+        if output["data"][0]["content"][0]["text"]["annotations"] != [] or "generate pdf" in prompt.lower() or "psychgen" in prompt.lower():
+            file_id = output["data"][0]["content"][0]["text"]["annotations"][0]["file_path"]["file_id"]
+            file_type = output["data"][0]["content"][0]["text"]["annotations"][0]["text"].split(".")[1]
+            PDFbyte = download_file(file_id,file_type)
+            # st.download_button("Download PDF",f"script.{file_type}")
+            st.download_button(label="Download PDF",
+                        data=PDFbyte,
+                        file_name="test.pdf",
+                        mime='application/octet-stream')
+    except :
+        pass
     
     # Add assistant response to chat history
     st.session_state.messages.append({"role": "assistant", "content": response})
