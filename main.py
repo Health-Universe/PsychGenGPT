@@ -1,10 +1,14 @@
 import streamlit as st
-from tts import TTS
+# from tts import TTS
 from assistant import call , download_file
-ttos = TTS()
+from gtts import gTTS
+
+langugae = "en"
+
+# ttos = TTS()
 
 st.title("PsychGenGPT")
-st.markdown('PsychGenGPT - Psychological Counseling | Text to voice psychotherapy generator At any time, to generate a psychotherapy session, say, "Generate psychotherapy session now."')
+st.markdown('PsychGenGPT - Psychological Counseling | Text to voice psychotherapy generator At any time, to generate a psychotherapy session, say, "Generate psychotherapy session now." or simply type "psychgen"')
 # Initialize chat history
 if "messages" not in st.session_state:
     st.session_state.messages = []
@@ -18,7 +22,7 @@ for message in st.session_state.messages:
 
 # React to user input
 
-if prompt := st.chat_input("What is up?"):
+if prompt := st.chat_input("Tell me about your problem ?"):
     # Display user message in chat message container
     st.chat_message("user").markdown(prompt)
     # Add user message to chat history
@@ -39,8 +43,10 @@ if prompt := st.chat_input("What is up?"):
             st.markdown(response)
     if "psychotherapy session" in prompt.lower() or "psychotherapy script" in prompt.lower() or "generate audio" in prompt.lower() or "psychgen" in prompt.lower():
         
-        audio_output = ttos.generate_tts(output["data"][0]["content"][0]["text"]["value"])
-        st.audio(audio_output)
+        # audio_output = ttos.generate_tts(output["data"][0]["content"][0]["text"]["value"])
+        audio_output = gTTS(text = output["data"][0]["content"][0]["text"]["value"],lang = langugae,slow = True,tld = "com.au")
+        audio_output.save("speech_output.mp4")
+        st.audio("speech_output.mp4")
 
     
     if output["data"][0]["content"][0]["text"]["annotations"] != [] or "generate pdf" in prompt.lower() or "psychgen" in prompt.lower():
